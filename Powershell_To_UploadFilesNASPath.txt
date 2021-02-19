@@ -1,0 +1,136 @@
+
+Calling functions
+
+uploadTheFilesToScannerRBCPath(inputSheet.getPhysicalNumberOfRows()/2,"Yes",environment);
+uploadTheFilesToScannerRBCPath(inputSheet.getPhysicalNumberOfRows()/2,"No",environment);
+
+
+
+public ArrayList<String> uploadTheFilesToScannerRBCPath(int totalRows, String hardCopy , String environment) throws Throwable{
+      String NasScanFirstPath = "";
+		
+		if(environment.equals("Stage")){
+			
+			NasScanFirstPath = NasScanFirstPathStg;
+			
+		}		
+		else if(environment.equals("QA")){
+			
+			NasScanFirstPath = NasScanFirstPathQA;
+		}
+		
+		ArrayList<String> fileNames = new ArrayList<String>();
+	    String fileName = "Test"+getCurrentDate().split("\\/")[0] + getCurrentDate().split("\\/")[1];
+		String currentFileName = null;
+		String fileNameWithHardCopy = "";
+		String desktopPath = System.getProperty("user.home") + "//Desktop";
+		copyTheFile(TestFileXMLToUploadScanRBCOld, desktopPath, PowerShellToCopy);
+		copyTheFile(TestFilePDFToUploadScanRBCOld, desktopPath, PowerShellToCopy);
+		if(hardCopy.equals("Yes")) {
+		fileNameWithHardCopy = fileName + "HCY";
+		renameTheFiles(desktopPath + "\\SOPTest.XML", fileNameWithHardCopy + ".XML", PowerShellToRename);
+		renameTheFiles(desktopPath + "\\SOPTest.PDF", fileNameWithHardCopy +".PDF", PowerShellToRename);
+		}
+		else if(hardCopy.equals("No")) {
+		fileNameWithHardCopy = fileName + "HCN";
+		renameTheFiles(desktopPath + "\\SOPTest.XML", fileNameWithHardCopy + ".XML", PowerShellToRename);
+		renameTheFiles(desktopPath + "\\SOPTest.PDF", fileNameWithHardCopy +".PDF", PowerShellToRename);
+		}
+		//updateTheXML(desktopPath + "\\" + fileName + ".XML", getCurrentDate(), PowerShellToUpdate);
+		updateTheXML(desktopPath + "\\" + fileNameWithHardCopy + ".XML", getCurrentDate(), hardCopy, PowerShellToUpdate);
+		//in above updateTheXML function needs to pass arg for Hard copy Yes or No
+		int j = 0;
+		
+		for (int iLoop = 1; iLoop <totalRows; iLoop++) {
+			if(j == 1){
+				j++;
+			}
+			if (j == 0) {
+				copyTheFile(desktopPath + "\\" + fileNameWithHardCopy + ".XML", NasScanFirstPath, PowerShellToCopy);				
+				copyTheFile(desktopPath + "\\" + fileNameWithHardCopy + ".PDF", NasScanFirstPath, PowerShellToCopy);
+				Thread.sleep(15000);
+				currentFileName = fileName + ".PDF";
+				fileNames.add(currentFileName);
+				renameTheFiles(desktopPath + "\\" + fileNameWithHardCopy + ".XML", fileNameWithHardCopy + ++j + ".XML",
+						PowerShellToRename);
+				renameTheFiles(desktopPath + "\\" + fileNameWithHardCopy + ".PDF", fileNameWithHardCopy + j + ".PDF",
+						PowerShellToRename);						
+			}
+			else if (j > 1) {
+				int i = j - 1;
+				copyTheFile(desktopPath + "\\" + fileNameWithHardCopy + i + ".XML", NasScanFirstPath, PowerShellToCopy);					
+				Thread.sleep(10000);
+				copyTheFile(desktopPath + "\\" + fileNameWithHardCopy + i + ".PDF", NasScanFirstPath, PowerShellToCopy);
+				Thread.sleep(10000);
+				currentFileName = fileName + i + ".PDF";
+				fileNames.add(currentFileName);
+				renameTheFiles(desktopPath + "\\" + fileNameWithHardCopy + i + ".XML", fileNameWithHardCopy + j + ".XML",PowerShellToRename);
+				renameTheFiles(desktopPath + "\\" + fileNameWithHardCopy + i + ".PDF", fileNameWithHardCopy + j + ".PDF",PowerShellToRename);
+				j++;
+				
+			}
+			}
+		
+		if(j == 1) {
+			deleteTheFile(desktopPath + "\\" + fileNameWithHardCopy + j + ".PDF",PowerShellToDelete);
+			deleteTheFile(desktopPath + "\\" + fileNameWithHardCopy + j + ".XML",PowerShellToDelete);
+		}
+		else {
+		deleteTheFile(desktopPath + "\\" + fileNameWithHardCopy + --j + ".PDF",PowerShellToDelete);
+		deleteTheFile(desktopPath + "\\" + fileNameWithHardCopy + j + ".XML",PowerShellToDelete);
+		}
+		Thread.sleep(140000);
+     return fileNames;
+     
+	 
+		 
+ }
+
+
+inner calling functions:
+
+public void copyTheFile(String fileSourcePath , String fileDestinationPath ,String powershellFilePath){
+		String command = "powershell.exe -file "+ powershellFilePath + " " + fileSourcePath + " " + fileDestinationPath;			
+		getTheCommandToRunThePowerShell(command);
+	}
+	
+public void renameTheFiles(String fileSourcePath , String fileRename, String powershellFilePath){
+		String command = "powershell.exe -file " +  powershellFilePath + " " + fileSourcePath + " " + fileRename;
+		getTheCommandToRunThePowerShell(command);	
+}
+
+public void updateTheXML(String fileSourcePath , String date, String hardCopy, String powershellFilePath){
+		
+		String command = "powershell.exe -file "+ powershellFilePath + " "+ fileSourcePath +" " + date + " " + hardCopy;
+		getTheCommandToRunThePowerShell(command);
+
+	}
+	
+public void deleteTheFile(String fileSourcePath ,String powershellFilePath){
+	String command = "powershell.exe -file "+ powershellFilePath + " " + fileSourcePath;			
+	getTheCommandToRunThePowerShell(command);
+}
+
+public void getTheCommandToRunThePowerShell(String command){
+		try{
+		Process powerShellProcess = Runtime.getRuntime().exec(command);
+        powerShellProcess.getOutputStream().close();
+        String line;      
+        BufferedReader stdout = new BufferedReader(new InputStreamReader(
+          powerShellProcess.getInputStream()));
+        while ((line = stdout.readLine()) != null) {
+         System.out.println(line);
+        }
+        stdout.close();        
+        BufferedReader stderr = new BufferedReader(new InputStreamReader(
+          powerShellProcess.getErrorStream()));
+        while ((line = stderr.readLine()) != null) {
+         System.out.println(line);
+        }
+        stderr.close();
+        System.out.println("Done");
+       
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}	

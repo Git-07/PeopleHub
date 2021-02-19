@@ -1,0 +1,47 @@
+LOB -> Property and Auto
+worked under Property LOB
+Execute the 10-12 k policies for the Property LOB
+Java as a programming language
+Selenium web driver for website automation
+Test ng as a testing framework
+TDD framework
+Version control tool -> Git
+CICD -> Using Jenkins
+JIRA as a defect tracking tool
+Maven as a build management tool
+
+Role -> 
+Write and maintain the test script.
+defect logging and tracking using JIRA
+sprint planning
+scrum meeting
+sprint review -> demo for shipped working product
+
+1)if a defect logged by you is rejected by developer then whom will you approach?
+answer is BA or product owner
+challenges ->
+on hitting the application url if there is wndows authentication appears which was working fine on windows 7 becoz .switchTo() method works fine on 
+win 7
+.switchTo() but windows 8 and above it doesnt work
+
+2)Extent report in jenkins execution does not contain screenshots
+
+Program name is Nexs Platform as service
+
+aim is to make a generic build which independent of OEMs(like lenovo, asus, HP , Dell)
+which is going to change the legacy way of registering a user which should be done using microservices.
+I waspart of OEM flows testing:
+as a tester we need to ensure the registration should be success and post registration. User should be able to buy/renew the product in all the locales.
+and post that Application gets updated with details like expiry extended in number of days as per the product renew package.
+and also to ensure the existing functionality does not get broken.
+
+most critical defect logged -> 
+Defect life cycle:
+new
+open -> 
+assigned -> here it could be duplicate/not a defect ->will go to Product owner if rejected by dev team
+in progress
+fixed
+ready for testing
+assigned to test team
+tested and closed if works fine 

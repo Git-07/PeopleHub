@@ -1,0 +1,33 @@
+1.Roles and responsibility in last project and dsr ->
+4.Explain your Automation project folder structure -> 
+1.Architecture of Selenium
+2.Inheritance concepts in selenium architecture
+4.testng -> hierarchies of the execution order
+5.how to run a specific test method(what changes we need to make in testng xml)
+3.How to execute two different test ng xml files using the single pom(what we need to change in POM) -> using profiling concepts
+6.dynamic xpaths by using a relationship
+7.Any CICD tool used -> Jenkins
+8.BDD ??
+9.reporting with extent reports
+10.how to re run the failed test
+11.how to write the xpath in i.e. and chrome browser in console window of the browser
+13.what is the difference b/w explicit wait and how to use the wait instance to find the WebElement(what method this wait instance will call)?
+14.
+14.What are the code repositories used in the project? -> git or svn
+
+.
+.
+.
+<div>
+  <div>
+<td class="datalabel">Before input tag</td>
+    <div>
+<input name="texbox"/>
+   </div>
+<td class="datalabel">After input tag</td>
+  </div>
+</div> 
+.
+.
+.
+
